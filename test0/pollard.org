@@ -1,0 +1,38 @@
+#+TITLE Pollard Rho
+
+#+BEGIN_SRC python :session
+def f(x):
+    return x**2 + 1
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session
+from fractions import gcd
+def factor_p(n, f):
+    a,b = 2,2
+    d = 1
+    while d == 1:
+        a = f(a)
+        b = f(f(a))
+        d = gcd(a-b,n)
+        print("a: {} b: {} d: {}".format(a,b,d))
+        if d > 1 and d < n:
+            return d
+        if d == n:
+            return False
+    return False
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session :results output
+factor_p(51469, f)
+
+#+END_SRC
+
+#+RESULTS:
+: a: 5 b: 677 d: 1
+: a: 26 b: 458330 d: 11
+: 11
+
