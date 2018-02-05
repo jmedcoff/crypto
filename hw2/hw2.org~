@@ -1,0 +1,36 @@
+#+TITLE: HW-1
+
+** Encoding of large integers
+
+Already in python, since version 3. Arbitrarily large integers are
+supported. See https://www.python.org/dev/peps/pep-0237/ for details.
+
+** Arithmetic on large integers
+
+Same as above; all operations between arbitrarily large integers (long
+ints) will return long ints and never overflow.
+
+** Arithmetic modulo n on large integers
+
+There are a few cases to consider: addition, subtraction,
+multiplication, division with remainder, and exponentiation. The first
+three are done easily by python. Division with remainder is performed
+by the ~divmod~ function, which takes two arguments x and y and
+returns the 2-tuple (x//y, x%y). Exponentiation is implemented in
+python's ~pow~ function, which takes an optional third argument: the
+modulus. Its implementation uses exponentiation by squaring. Details
+were gathered from
+https://github.com/python/cpython/blob/f13f12d8daa587b5fcc66fe3ed1090a5dadab289/Lib/_pydecimal.py#L2284.
+
+#+BEGIN_SRC python :session
+# examples/testing
+pow(2, 64)
+divmod(99, 12)
+pow(78129634987162349867198234759871623, 129034871890236450981234, 1234)
+divmod(8920981732409867198023741234, 123094876108923745098172)
+
+#+END_SRC
+
+#+RESULTS:
+| 72472L | 49871043945543269020050L |
+

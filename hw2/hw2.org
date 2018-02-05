@@ -1,0 +1,164 @@
+#+TITLE: HW-1
+#+AUTHOR: Jason Medcoff
+
+The bullet points given in the assignment follow as section headers.
+
+** Encoding of large integers
+
+Already in python, since version 3. Arbitrarily large integers are
+supported. See https://www.python.org/dev/peps/pep-0237/ for details.
+
+** Arithmetic on large integers
+
+Same as above; all operations between arbitrarily large integers (long
+ints) will return long ints and never overflow.
+
+** Arithmetic modulo n on large integers
+
+There are a few cases to consider: addition, subtraction,
+multiplication, division with remainder, and exponentiation. The first
+three are done easily by python. Division with remainder is performed
+by the ~divmod~ function, which takes two arguments x and y and
+returns the 2-tuple (x//y, x%y). Exponentiation is implemented in
+python's ~pow~ function, which takes an optional third argument: the
+modulus. Its implementation uses exponentiation by squaring. Details
+were gathered from
+https://github.com/python/cpython/blob/f13f12d8daa587b5fcc66fe3ed1090a5dadab289/Lib/_pydecimal.py#L2284.
+
+#+BEGIN_SRC python :session :results output
+# examples/testing
+# important: org will use python2 by default. Need to do
+# M-x RET set-variable RET org-babel-python-command RET "python3" RET
+pow(2, 64) # ~1.845e19
+divmod(99, 12) # 96 + 3 => 12*8 + 3
+pow(78129634987162349867198234759871623, 129034871890236450981234, 1234)
+divmod(8920981732409867198023741234, 123094876108923745098172)
+
+#+END_SRC
+
+#+RESULTS:
+: 
+: ... ... 18446744073709551616
+: (8, 3)
+: 461
+: (72472, 49871043945543269020050)
+
+** GCD Computation
+
+There is a built in ~gcd~ function in the fractions module; we'll
+ignore it and write our own. Two versions are given, one simple
+implementation that only returns the gcd, and the extended algo we saw
+that returns the integer coefficients to write the gcd as a linear
+combination of the inputs.
+
+#+BEGIN_SRC python :session :results output
+def euclidean(a, b):
+    """Return the gcd(a, b)."""
+    while b:
+        a, b = b, a%b
+    return abs(a)
+
+euclidean(462, 1071) # 21
+
+def ext_euclidean(a, b):
+    """Return a 3-tuple (r, u, v) such that r = au + bv and r = gcd(a, b)."""
+    u, r, x, y = 1, a, 0, b
+    while y != 0:
+        q, t = divmod(r, y)
+        s = u - q*x
+        u, r = x, y
+        x, y = s, t
+    v = (r - a*u)/b
+    return r, u, v
+
+ext_euclidean(1071, 462) # 21, -3, 7
+ext_euclidean(462, 1071) # 21, 7, -3
+
+#+END_SRC
+
+#+RESULTS:
+: 
+: ... ... ... ... >>> 21
+: >>> ... ... ... ... ... ... ... ... ... ... >>> (21, -3, 7.0)
+: (21, 7, -3.0)
+
+** Computation of inverses mod n
+
+Easy, given that the extended euclidean algo gives this to
+us. However, note that the result will belong to the equivalence class
+of inverses to a, and will not necessarily fall in [0, ..., p-1]. So,
+we compute the result mod p so that it always falls in this range.
+
+#+BEGIN_SRC python :session
+def inverse_modp(a, p):
+    """Find the inverse of a in Z/pZ, if it exists."""
+    d, x, y = ext_euclidean(a, p)
+    return None if d != 1 else (x % p)
+
+inverse_modp(3, 7) # [5]
+#+END_SRC
+
+#+RESULTS:
+: 5
+
+** Large integer random generation
+
+Writing a random number generator, especially a cryptographically
+secure one, is probably beyond the scope of this homework
+assignment. Luckily, python has two options for random number
+generation relevant here.
+
+First, from the random module, is the randint function. It takes two
+parameters and returns a random number falling between them. The
+second, from the secrets module, are the randbelow and randbits
+functions. Randbelow returns a random int from zero to its argument,
+and randbits returns an int with a length in bits of its argument.
+
+Randbits seems like it will be the favorite here, since we are allowed
+to specify a number of bits explicitly.
+
+** Primality testing
+
+The Miller-Rabin test follows, and runs reasonably fast on the last
+number shown, a 1024 bit prime.
+
+#+BEGIN_SRC python :session :results output
+import random
+
+def miller_rabin(n, k=50):
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    r, s = 0, n - 1
+    while s % 2 == 0:
+        r += 1
+        s >>= 1
+    for _ in range(k):
+        a = random.randrange(2, n - 1)
+        x = pow(a, s, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True
+
+miller_rabin(899809343)
+miller_rabin(3491782499)
+miller_rabin(27300924389937027134524462361027444321292145544396087140385989710014427028451)
+miller_rabin(2156853993852630258960530132801578551320547552652899991641586751581106856175018010791849493588393159883363962125782129647093808756195410868690963249309691)
+miller_rabin(131333026971595176244104093561156972733551974100191111268413655579366316693957322756860820506640337212824776974856211698587227620329702683791008250179139518893471240239169158765262598833790532592936864244538967858318268346703142919976316506451346378724557013990216639684161556141673931614873295093529533324641)
+#+END_SRC
+
+#+RESULTS:
+: 
+: >>> ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... >>> True
+: True
+: True
+: True
+: True
+
