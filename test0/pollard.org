@@ -27,12 +27,12 @@ def factor_p(n, f):
 #+RESULTS:
 
 #+BEGIN_SRC python :session :results output
-factor_p(51469, f)
+factor_p(661563014968918056308911823657, f)
 
 #+END_SRC
 
 #+RESULTS:
-: a: 5 b: 677 d: 1
-: a: 26 b: 458330 d: 11
-: 11
+: Traceback (most recent call last):
+:   File "<stdin>", line 1, in <module>
+: NameError: name 'factor_p' is not defined
 

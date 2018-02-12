@@ -1,0 +1,72 @@
+#+BEGIN_SRC python :session
+# Problem 1
+n = 31864033
+x = 24779170
+
+miller_rabin(n) # certainly not prime
+
+pow(x, 2, n) # 1, as expected
+pow(n-1, 2, n) # 1 as well...
+(x**2 - 1) % n # 0, aha!
+euclidean(n, x+1) # 8923, a factor of n.
+
+#+END_SRC
+
+#+RESULTS:
+: 3571.0
+
+#+BEGIN_SRC python :session
+inverse_modp(7, 17)
+inverse_modp(13, 17)
+24 % 17
+x = 2
+y = 7
+(2*x + 3*y) % 17
+(7*x - 7) % 17
+#+END_SRC
+
+#+RESULTS:
+: 7
+
+#+BEGIN_SRC python :session
+miller_rabin(391) # = 17*23
+ext_euclidean(17, 23)
+17*-4 + 3*23
+inverse_modp(2, 391)
+#+END_SRC
+
+#+RESULTS:
+: 196
+
+#+BEGIN_SRC python :session :results output
+n = 12509443
+pn = 12501720
+n + 1 - pn
+
+sum = 7724
+for i in range(sum):
+    x = sum-i
+    if x*i == n:
+        soln = (x,i)
+        break
+
+soln # (5413, 2311)
+#+END_SRC
+
+#+RESULTS:
+: 
+: >>> 7724
+: >>> >>> ... ... ... ... ... >>> (5413, 2311)
+: True
+
+#+BEGIN_SRC python :session :results output
+n = 661563014968918056308911823657
+witness = 141618362225198057430240896320
+
+pow(witness, n-1, n)
+#+END_SRC
+
+#+RESULTS:
+: 
+: >>> (False, 141618362225198057430240896320)
+
