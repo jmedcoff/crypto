@@ -22,7 +22,7 @@ def add(p1, p2, curve, p):
 
 #+RESULTS:
 
-#+BEGIN_SRC python :session :results output
+#+BEGIN_SRC python :session
 #try example
 curve = (3, 8)
 p = (9, 7)
@@ -34,9 +34,39 @@ add(p, q, curve, 13) # (2, 10)
 #+END_SRC
 
 #+RESULTS:
-: 
-: >>> >>> >>> (2, 10)
+| 2 | 10 |
 
 #+BEGIN_SRC python :session
+def ec_exp(pt, n, curve, p):
+    q = pt
+    r = None
+    while n>0:
+        if (n % 2) == 1:
+            r = add(r, q, curve, p)
+        q = add(q, q, curve, p)
+        n = n>>1
+    return r
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session
+n = 947
+curve = (14, 19)
+p = 3623
+pt = (6, 730)
+ec_exp(pt, n, curve, p) # (3492, 60)
 
 #+END_SRC
+
+#+RESULTS:
+| 3492 | 60 |
+
+#+BEGIN_SRC python :session :results output
+
+#+END_SRC
+
+#+RESULTS:
+: 
+: >>> >>> >>> (3, 0)
+
