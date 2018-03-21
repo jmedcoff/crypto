@@ -1,0 +1,42 @@
+#+BEGIN_SRC python :session :results output
+def add(p1, p2, curve, p):
+    """blah"""
+    if p1 is None:
+        return p2
+    if p2 is None:
+        return p1
+    if (p1[0] == p2[0]) and (p1[1] == -(p2[1])):
+        return None
+    lam = 0
+    if p1 == p2:
+        lam = ((3*(p1[0]**2)+curve[0])*inverse_modp(2*p1[1], p)) % p
+    else:
+        lam = ((p2[1] - p1[1])*inverse_modp(p2[0] - p1[0], p)) % p
+    x3 = (lam**2 - p1[0] - p2[0]) % p
+    y3 = (lam*(p1[0] - x3) - p1[1]) % p
+    return x3, y3
+# Denote the point at infinity by 'None'
+# a curve is represented by a 2-tuple (a, b)
+# for y^2 = x^3 + ax + b
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session :results output
+#try example
+curve = (3, 8)
+p = (9, 7)
+q = (1, 8)
+add(p, q, curve, 13) # (2, 10)
+
+
+
+#+END_SRC
+
+#+RESULTS:
+: 
+: >>> >>> >>> (2, 10)
+
+#+BEGIN_SRC python :session
+
+#+END_SRC
