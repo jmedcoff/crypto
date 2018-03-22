@@ -1,6 +1,8 @@
 \documentclass{amsart}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{listings}
 \usepackage{geometry}
 \geometry{a4paper}
 
@@ -63,23 +65,134 @@
 	If we take $4a^3 + 27b^2$ and make the substitution for $a$ and $b$ shown in equation (1) in terms of the roots, we have
 	\begin{equation*}
 	\begin{split}
-	4 p^3 + 27 q^2 & = 4 (-e_1^2 - e_1e_2 - e_2^2)^3 + 27 (e_1^2e_2 + e_1e_2^2)^2 \\
+	4 a^3 + 27 b^2 & = 4 (-e_1^2 - e_1e_2 - e_2^2)^3 + 27 (e_1^2e_2 + e_1e_2^2)^2 \\
 	&= -4 e_1^6 - 12 e_1^5 e_2 + 3 e_1^4 e_2^2 + 26 e_1^3 e_2^3 + 3 e_1^2 e_2^4 - 12 e_1 e_2^5 - 4 e_2^6
 	\end{split}
 	\end{equation*}
 	which is precisely equation (2). Thus $4a^3 + 27b^2$ is the discriminant and it follows that $4a^3 + 27b^2 = 0$ if and only if two or more of $e_1$, $e_2$, $e_3$ are the same.
 	
+	$\newline$
+	\noindent{\textbf{3.}}
+	Consider $$y^2 = x^3 +2x + 3 \ \text{over } \mathbb{F}_7$$
+	\begin{enumerate}[label=(\alph*)]
+		\item List all the points on this curve.
+		
+		\textit{Solution.}
+		The points on the curve are those that satisfy the equation in $\mathbb{F}_7$. That is, we can calculate $x^3 +2x + 3$ for all $x$, then check if that number exists as a square in $\mathbb{F}_7$. Brute forcing, we have $y^2 \in \{3, 6, 1, 5, 0\}$ for $x \in \{0, 1, \dots, 6\}$. In addition, we have $a^2 \in \{0, 1, 2, 4\}$ for $a \in \{0, 1, \dots, 6\}$. Then the feasible $y$ values are 0 and 1. Specifically, we have $(6, 0)$, $(2, \pm1)$, and $(3, \pm1)$.
+		
+		
+		\item Make an addition table for these points.
+		
+		\textit{Solution.}
+		\begin{table}[h]
+			\centering
+			\caption{Addition table}
+			\label{my-label}
+			\begin{tabular}{r|ccccc}
+				$\oplus$ & $(6,0)$       & $(2,1)$       & $(2,-1)$      & $(3,1)$       & $(3,-1)$      \\ \hline
+				$(6,0)$  & $\mathcal{O}$ & $(3,1)$       & $(3,-1)$      & $(2,1)$       & $(2,-1)$      \\
+				$(2,1)$  & $(3,1)$       & $(3,-1)$      & $\mathcal{O}$ & $(2,-1)$      & $(6,0)$       \\
+				$(2,-1)$ & $(3,-1)$      & $\mathcal{O}$ & $(3,1)$       & $(6,0)$       & $(2,1)$       \\
+				$(3,1)$  & $(2,1)$       & $(2,-1)$      & $(6,0)$       & $(3,-1)$      & $\mathcal{O}$ \\
+				$(3,-1)$ & $(2,-1)$      & $(6,0)$       & $(2,1)$       & $\mathcal{O}$ & $(3,1)$      
+			\end{tabular}
+		\end{table}
+	\end{enumerate}
+	
+	$\newline$
+	\noindent{\textbf{4.}}
+	Consider the curve $y^2 = x^3 + x + 1$ over $\mathbb{F}_5$ and the points $P = (4,2)$, $Q = (0,1)$. Solve the discrete log problem, i.e. find $n$ such that $Q = nP$.
+	
+	\textit{Solution.}
+	Brute force all multiples of $P$ using code. Clearly $n=5$.
+	\begin{table}[h]
+		\centering
+		\caption{Multiplication table}
+		\label{boi}
+		\begin{tabular}{r|ccccccccc}
+			$n$  & 0             & 1        & 2        & 3        & 4        & 5        & 6        & 7        & 8        \\ \hline
+			$nP$ & $\mathcal{O}$ & $(4, 2)$ & $(3, 4)$ & $(2, 4)$ & $(0, 4)$ & $(0, 1)$ & $(2, 1)$ & $(3, 1)$ & $(4, 3)$
+		\end{tabular}
+	\end{table}
+	
+	$\newline$
+	\noindent{\textbf{5.}}
+	Consider the group of points on $E$. Since $E$ is a finite group, every point in $E$ has finite order. Then for some $P \in E$, if $s$ is the smallest solution to $sP = \mathcal{O}$, $s$ is the order of $P$. We know then that $(is)P = (i)(sP) = (i)\mathcal{O} = \mathcal{O}$ for all $i$. Then consider $nP = Q$. By the division algorithm and laws of exponents for groups,
+	\begin{equation*}
+	\begin{split}
+	nP &= Q \\
+	(is + r)P &= Q \\
+	(is)P \oplus (r)P &= Q \\
+	\mathcal{O} \oplus (r)P &= Q \\
+	(r)P &= Q
+	\end{split}
+	\end{equation*}
+	but since $r$ is less than $s$, it must be the smallest such solution to the equation; therefore $r=n_0$.
+	
+	$\newline$
+	\noindent{\textbf{6.}}
+	Use the double-and-add algorithm to compute $nP$ in
+	$$ y^2 = x^3 + 1828x + 1675 \ \text{over } \mathbb{F}_1999 $$
+	for $n=11$ and $P = (1756, 348)$. List the intermediate steps in a table.
+	
+	\textit{Solution.}
+	We obtain the answer as $(1068,1540)$. Table \ref{pow} displays the state of the intermediate point \texttt{r} in the code.	
+	\begin{table}[h]
+		\centering
+		\caption{Exponentiation of $P$}
+		\label{pow}
+		\begin{tabular}{l|l}
+			$n$ & $R$           \\ \hline
+			11  & $(1756, 348)$ \\
+			5   & $(1756, 348)$ \\
+			2   & $(1362,998)$  \\
+			1   & $(1362,998)$  \\
+			0   & $(1068,1540)$
+		\end{tabular}
+	\end{table}
 	
 	
+	\noindent{\textbf{7.}}
+	Attach a listing of \textbf{your} code for
+	\begin{enumerate}[label=(\alph*)]
+		\item Addition of points on an elliptic curve over a finite field.
+		\item Exponentiation $(nP)$.
+	\end{enumerate}
+
+	\textit{Solution.}
+	Both pieces of code assume a point to be a 2-tuple. A curve is also a 2-tuple, given as $(a, b)$ for $y^2 = x^3 + ax + b$.
 	
+	\begin{lstlisting}[language=Python]
+    def add(p1, p2, curve, p):
+        if p1 is None:
+            return p2
+        if p2 is None:
+            return p1
+        if (p1[0] == p2[0]) and (p1[1] == (-p2[1]%p)):
+            return None
+        lam = 0
+        if p1 == p2:
+            lam = ((3*(p1[0]**2)+curve[0])*inverse_modp(2*p1[1], p)) % p
+        else:
+            lam = ((p2[1] - p1[1])*inverse_modp(p2[0] - p1[0], p)) % p
+        x3 = (lam**2 - p1[0] - p2[0]) % p
+        y3 = (lam*(p1[0] - x3) - p1[1]) % p
+        return x3, y3
+	\end{lstlisting}
 	
+	Note that the function \texttt{inverse\_modp} finds the multiplicative inverse of its argument mod \texttt{p}; it is also homemade, from a past homework.
 	
-	
-	
-	
-	
-	
-	
+	\begin{lstlisting}[language=Python]
+    def ec_exp(pt, n, curve, p):
+        q = pt
+        r = None
+        while n>0:
+            if (n % 2) == 1:
+                r = add(r, q, curve, p)
+            q = add(q, q, curve, p)
+            n = n>>1
+        return r
+	\end{lstlisting}
 	
 	
 	
